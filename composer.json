@@ -6,6 +6,9 @@
 	"require": {
 		"laravel/framework": "4.1.*"
 	},
+	"require-dev": {
+        "d11wtq/boris": "dev-master"
+    },
 	"autoload": {
 		"classmap": [
 			"app/commands",
