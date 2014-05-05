@@ -1,13 +1,15 @@
 <?php
+//Use the php artisan auth:reminders-controller command.
 
-class RemindersController extends Controller {
+
+class RemindersController extends BaseController {
 
 	/**
 	 * Display the password reminder view.
 	 *
 	 * @return Response
 	 */
-	public function getRemind()
+	public function index()
 	{
 		return View::make('password.remind');
 	}
@@ -17,15 +19,15 @@ class RemindersController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function postRemind()
+	public function store()
 	{
 		switch ($response = Password::remind(Input::only('email')))
 		{
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', Lang::get($response));
+				return Redirect::back()->with('flash_error', Lang::get($response));
 
 			case Password::REMINDER_SENT:
-				return Redirect::back()->with('status', Lang::get($response));
+				return Redirect::back()->with('flash_error', Lang::get($response));
 		}
 	}
 
@@ -35,7 +37,7 @@ class RemindersController extends Controller {
 	 * @param  string  $token
 	 * @return Response
 	 */
-	public function getReset($token = null)
+	public function show($token = null)
 	{
 		if (is_null($token)) App::abort(404);
 
@@ -47,9 +49,10 @@ class RemindersController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function postReset()
+	public function update()
 	{
-		$credentials = Input::only(
+
+        $credentials = Input::only(
 			'email', 'password', 'password_confirmation', 'token'
 		);
 
@@ -65,10 +68,10 @@ class RemindersController extends Controller {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', Lang::get($response));
+				return Redirect::back()->with('flash_error', Lang::get($response));
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/');
+				return Redirect::to('/')->with('flash_error', "Please use new password to login");
 		}
 	}
 
