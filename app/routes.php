@@ -1,3 +1,3 @@
 <?php
 
-Route::controller('password', 'RemindersController');
+Route::resource('password', 'RemindersController', array('only' => array('index','show', 'store', 'update')));
